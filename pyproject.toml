@@ -14,6 +14,18 @@ dependencies = [
 packages = [{include = "gitlab_tui", from = "src"}]
 
 
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.3.0"
+black = "^25.9.0"
+isort = "^6.0.1"
+autoflake = "^2.3.1"
+flake8 = "^7.3.0"
+bandit = "^1.8.6"
+mypy = "^1.18.2"
+pytest = "^8.4.2"
+pytest-cov = "^7.0.0"
+detect-secrets = "^1.5.0"
+
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"

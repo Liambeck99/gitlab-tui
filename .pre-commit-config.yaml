@@ -1,0 +1,66 @@
+repos:
+  # General file checks (no Poetry equivalent, so keep external)
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: name-tests-test
+
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: make format-check
+        language: system
+        types: [python]
+        require_serial: true
+        pass_filenames: false
+
+      - id: isort
+        name: isort
+        entry: make sort-imports-check
+        language: system
+        types: [python]
+        require_serial: true
+        pass_filenames: false
+
+      - id: autoflake
+        name: autoflake
+        entry: make clean-imports-check
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: flake8
+        name: flake8
+        entry: make lint
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: mypy
+        name: mypy
+        entry: make type-check
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: bandit
+        name: bandit
+        entry: make security-scan
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: detect-secrets
+        name: detect-secrets
+        entry: bash
+        args: [-c, 'make secrets-check FILES="$*"', --]
+        language: system
+        types: [text]
+        pass_filenames: true
+        require_serial: true
