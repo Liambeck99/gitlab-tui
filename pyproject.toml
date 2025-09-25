@@ -1,0 +1,19 @@
+[project]
+name = "gitlab-tui"
+version = "0.1.0"
+description = "A TUI application for interacting with GitLab"
+authors = [
+    {name = "Liam Beckingham",email = "lj.beckingham99@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+]
+
+[tool.poetry]
+packages = [{include = "gitlab_tui", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
