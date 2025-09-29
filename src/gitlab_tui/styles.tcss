@@ -119,7 +119,7 @@ PipelineMainView .info-value {
 }
 
 PipelineMainView .info-grid {
-    grid-size: 3;
+    grid-size: 2;
     grid-gutter: 0 1;
     height: auto;
     margin-bottom: 5;
