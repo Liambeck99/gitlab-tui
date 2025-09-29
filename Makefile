@@ -41,7 +41,7 @@ type-check: ## Run mypy type checking
 
 .PHONY: security-scan
 security-scan: ## Run bandit security scan
-	poetry run bandit -r src/
+	poetry run bandit -r src/ -c "pyproject.toml"
 
 .PHONY: secrets-check
 secrets-check: ## Check for new secrets against baseline
@@ -106,5 +106,5 @@ pre-commit-update: ## Update pre-commit hook versions
 # === Application ===
 
 .PHONY: run
-run: ## Run the gitlab-tui application
+run: ## Run gitlab-tui
 	poetry run gitlab-tui

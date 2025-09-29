@@ -6,13 +6,19 @@ authors = [
     {name = "Liam Beckingham",email = "lj.beckingham99@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<4.0.0"
 dependencies = [
+    "textual>=0.45.0",
+    "requests>=2.28.0",
+    "tomli-w (>=1.2.0,<2.0.0)",
+    "rich (>=14.1.0,<15.0.0)"
 ]
 
 [tool.poetry]
 packages = [{include = "gitlab_tui", from = "src"}]
 
+[tool.poetry.scripts]
+gitlab-tui = "gitlab_tui.main:main"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.3.0"
@@ -25,7 +31,22 @@ mypy = "^1.18.2"
 pytest = "^8.4.2"
 pytest-cov = "^7.0.0"
 detect-secrets = "^1.5.0"
+textual-dev = "^1.7.0"
+textual = {extras = ["syntax"], version = "^6.1.0"}
+watchdog = "^6.0.0"
+flake8-pyproject = "^1.2.3"
+types-requests = "^2.32.4.20250913"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
+[tool.bandit]
+skips = ["B311"]
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E501"]
