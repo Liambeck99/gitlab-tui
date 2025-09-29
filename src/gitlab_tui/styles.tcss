@@ -1,0 +1,260 @@
+/* GitLab TUI Styles */
+
+/* Global styles */
+* {
+    scrollbar-gutter: stable;
+}
+
+/* Header and footer */
+Header {
+    background: $primary;
+    color: $text;
+    padding: 0 1;
+    dock: top;
+    height: 3;
+}
+
+Footer {
+    background: $surface;
+    color: $text;
+    dock: bottom;
+    height: 1;
+}
+
+/* Tabbed content */
+TabbedContent {
+    height: 1fr;
+}
+
+TabPane {
+    padding: 0;
+}
+
+/* Horizontal layout for main content */
+Horizontal {
+    height: 1fr;
+}
+
+/* Pipeline sidebar */
+PipelineSidebar {
+    width: 1fr;
+    max-width: 50;
+    min-width: 40;
+    border-right: solid $primary;
+    padding: 1;
+}
+
+/* Pipeline main view */
+PipelineMainView {
+    width: 2fr;
+    padding: 1;
+}
+
+/* Loading and error states */
+.loading {
+    color: $warning;
+    text-style: italic;
+}
+
+.error {
+    color: $error;
+    text-style: bold;
+}
+
+/* Status colors */
+.success {
+    color: $success;
+}
+
+.failed {
+    color: $error;
+}
+
+.running {
+    color: $warning;
+}
+
+.pending {
+    color: $accent;
+}
+
+/* Hidden elements */
+.hidden {
+    display: none;
+}
+
+/* Data table customization */
+DataTable {
+    height: 1fr;
+}
+
+DataTable>.datatable--header {
+    text-style: bold;
+    background: $primary;
+    color: $text;
+}
+
+DataTable>.datatable--cursor {
+    background: $primary 30%;
+}
+
+/* Pipeline Main View styles */
+PipelineMainView {
+    width: 2fr;
+    padding: 1;
+}
+
+PipelineMainView .title {
+    text-style: bold;
+    color: $primary;
+    margin-bottom: 1;
+}
+
+PipelineMainView .info-label {
+    color: $text-muted;
+}
+
+PipelineMainView .info-value {
+    text-style: bold;
+}
+
+PipelineMainView .info-grid {
+    grid-size: 2;
+    grid-gutter: 0 1;
+    height: auto;
+    margin-bottom: 5;
+}
+
+PipelineMainView .job-table {
+    margin-top: 1;
+    height: auto;
+}
+
+PipelineMainView .stage-cell {
+    text-style: bold;
+    background: $primary-darken-2;
+}
+
+PipelineMainView .success-job {
+    color: $success;
+}
+
+PipelineMainView .failed-job {
+    color: $error;
+}
+
+PipelineMainView .running-job {
+    color: $warning;
+}
+
+PipelineMainView .placeholder {
+    color: $text-muted;
+    text-style: italic;
+    width: 100%;
+    height: 1fr;
+    content-align: center middle;
+}
+
+/* Layout sections */
+PipelineMainView .info-section {
+    height: auto;
+    max-height: 6;
+}
+
+PipelineMainView .jobs-section {
+    height: 1fr;
+}
+
+PipelineMainView .title {
+    margin-bottom: 0;
+    height: 1;
+}
+
+/* Pipeline Sidebar specific styles */
+PipelineSidebar .title {
+    text-style: bold;
+    color: $primary;
+    margin-bottom: 1;
+}
+
+PipelineSidebar .pipeline-id {
+    text-style: bold;
+    width: 1fr;
+}
+
+PipelineSidebar .pipeline-time {
+    color: $text-muted;
+    text-align: right;
+    dock: right;
+    width: auto;
+}
+
+PipelineSidebar .pipeline-ref {
+    color: $success;
+    width: 1fr;
+}
+
+PipelineSidebar .pipeline-author {
+    color: $text-muted;
+    text-align: right;
+    width: auto;
+}
+
+PipelineSidebar ListView {
+    height: 1fr;
+}
+
+PipelineSidebar ListItem {
+    padding: 0;
+    height: 3;
+    border-bottom: solid $surface;
+}
+
+PipelineSidebar ListItem:hover {
+    background: $surface;
+}
+
+PipelineSidebar ListItem.-active {
+    background: $primary 20%;
+    border-left: solid $primary;
+}
+
+.job-success {
+    color: ansi_green;
+}
+
+.job-failed {
+    color: ansi_red;
+}
+
+.job-running {
+    color: ansi_yellow;
+}
+
+.job-pending {
+    color: ansi_cyan;
+}
+
+.job-canceled {
+    color: ansi_black;
+}
+
+.job-created {
+    color: ansi_blue;
+}
+
+.job-manual {
+    color: ansi_magenta;
+}
+
+/* Debug panel styles */
+.debug-panel {
+    height: 30%;
+    border-top: solid $primary;
+    background: $surface;
+}
+
+.debug-panel.hidden {
+    display: none;
+    height: 0;
+}
