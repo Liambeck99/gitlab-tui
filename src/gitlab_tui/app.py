@@ -1,9 +1,8 @@
 """Main GitLab TUI application."""
 
 import asyncio
-import logging
 import os
-from pathlib import Path
+from logging import Formatter, Handler, Logger
 from typing import Optional
 
 from textual.app import App, ComposeResult
@@ -51,54 +50,26 @@ class GitLabTUI(App):
     error_message: reactive[Optional[str]] = reactive(None)
     debug_panel_visible: reactive[bool] = reactive(False)
 
-    def __init__(self, gitlab_api: GitlabAPI, config: AppConfig):
+    def __init__(self, logger: Logger, gitlab_api: GitlabAPI, config: AppConfig):
         super().__init__()
         self.config = config
 
         # Setup debug mode
         self.debug_mode = os.getenv("DEBUG", "").lower() in ("true", "1", "yes")
         self.debug_keys = os.getenv("DEBUG_KEYS", "").lower() in ("true", "1", "yes")
-        self.debug_panel_visible = self.debug_mode  # Show by default if DEBUG=true
-        self._setup_logging()
+        self.debug_panel_visible = self.debug_mode
 
         self.gitlab_api = gitlab_api
         self.project = config.gitlab.project  # Can be ID (int) or path (str)
-        self.default_branch = config.gitlab.default_branch
+        self.branch = config.gitlab.branch
         self.pipelines_data: list = []
         self.current_pipeline_jobs: list = []
 
         # Setup logger for this instance
-        self.logger = logging.getLogger("gitlab_tui")
+        self.logger = logger
         self.logger.info(
             f"GitLab TUI starting - Debug mode: {self.debug_mode}, Debug keys: {self.debug_keys}"
         )
-
-    def _setup_logging(self) -> None:
-        """Setup logging for debug mode."""
-        # Create logs directory
-        log_dir = Path.home() / ".config" / "gitlab-tui" / "logs"
-        log_dir.mkdir(parents=True, exist_ok=True)
-
-        # Setup file logging
-        log_file = log_dir / "gitlab-tui.log"
-
-        # Configure logger
-        logger = logging.getLogger("gitlab_tui")
-        logger.setLevel(logging.DEBUG if self.debug_mode else logging.INFO)
-
-        # Remove existing handlers to avoid duplicates
-        logger.handlers.clear()
-
-        # File handler
-        file_handler = logging.FileHandler(log_file)
-        file_formatter = logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-        )
-        file_handler.setFormatter(file_formatter)
-        logger.addHandler(file_handler)
-
-        # Store log file path for later use
-        self.log_file = log_file
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
@@ -142,7 +113,7 @@ class GitLabTUI(App):
         debug_log = self.query_one("#debug-log", RichLog)
 
         # Create custom handler that writes to RichLog
-        class RichLogHandler(logging.Handler):
+        class RichLogHandler(Handler):
             def __init__(self, rich_log_widget):
                 super().__init__()
                 self.rich_log = rich_log_widget
@@ -155,11 +126,10 @@ class GitLabTUI(App):
                     pass  # nosec B110 Ignore errors in logging
 
         # Add RichLog handler to logger
-        logger = logging.getLogger("gitlab_tui")
         rich_handler = RichLogHandler(debug_log)
-        rich_formatter = logging.Formatter("%(levelname)s - %(message)s")
+        rich_formatter = Formatter("%(levelname)s - %(message)s")
         rich_handler.setFormatter(rich_formatter)
-        logger.addHandler(rich_handler)
+        self.logger.addHandler(rich_handler)
 
     def _setup_debug_logging(self) -> None:
         """Setup debug logging for navigation actions."""
@@ -228,14 +198,14 @@ class GitLabTUI(App):
     async def refresh_pipelines(self) -> None:
         """Refresh pipeline data from GitLab API."""
         self.logger.debug(
-            f"Refreshing pipelines for project {self.project}, branch: {self.default_branch}"
+            f"Refreshing pipelines for project {self.project}, branch: {self.branch}"
         )
         try:
             pipelines = await asyncio.get_event_loop().run_in_executor(
                 None,
                 self.gitlab_api.get_pipelines,
                 self.project,
-                self.default_branch,
+                self.branch,
                 10,
             )
             self.logger.info(f"Retrieved {len(pipelines)} pipelines")
@@ -472,7 +442,6 @@ class GitLabTUI(App):
         if self.debug_panel_visible:
             debug_log.remove_class("hidden")
             self.logger.info("Debug panel shown")
-            self.logger.info(f"Log file: {self.log_file}")
         else:
             debug_log.add_class("hidden")
             self.logger.info("Debug panel hidden")

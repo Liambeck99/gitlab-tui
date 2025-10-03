@@ -57,7 +57,7 @@ format-all: format sort-imports clean-imports ## Run all formatters (black, isor
 check-all: format-check sort-imports-check clean-imports-check lint type-check security-scan ## Run all checks without making changes
 
 .PHONY: fix-all
-fix-all: format-all lint-fix ## Run all formatters and auto-fixable lints
+fix-all: format-all ## Run all formatters and auto-fixable lints
 
 .PHONY: pre-commit-manual
 pre-commit-manual: format-all lint type-check security-scan ## Run all pre-commit checks manually
