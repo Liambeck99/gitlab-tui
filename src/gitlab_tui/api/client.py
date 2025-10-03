@@ -1,6 +1,6 @@
-import logging
 import time
 import urllib.parse
+from logging import Logger
 from typing import Literal, Union, overload
 
 from requests import HTTPError, Session
@@ -22,14 +22,14 @@ class GitlabAPI:
     SESSION_POOL_MAXSIZE = 20
     REQUEST_TIMEOUT = 30  # seconds
 
-    def __init__(self, base_url: str, auth_token: str):
+    def __init__(self, logger: Logger, base_url: str, auth_token: str):
         # Remove trailing slash from base_url
         self._base_url = base_url.rstrip("/")
 
         self._session = self._create_session(auth_token)
 
         # Setup logger
-        self.logger = logging.getLogger("gitlab_tui.api")
+        self.logger = logger
         self.logger.info(f"GitLab API client initialized for: {self._base_url}")
 
     def _create_auth_headers(self, auth_token: str) -> dict:
