@@ -11,7 +11,7 @@ from textual.reactive import reactive
 from textual.widget import Widget
 from textual.widgets import DataTable, Label, Static
 
-from gitlab_tui.config.manager import AppConfig
+from gitlab_tui.config.config import Config
 from gitlab_tui.ui.components.base_widget import BaseComponent
 
 
@@ -23,7 +23,7 @@ class PipelineMainView(BaseComponent, Widget):
     def __init__(
         self,
         logger: Logger,
-        config: AppConfig,
+        config: Config,
         **kwargs,
     ):
         super().__init__(logger, config, **kwargs)

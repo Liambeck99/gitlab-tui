@@ -7,7 +7,7 @@ from typing import Any, Dict
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Label, ListItem
 
-from gitlab_tui.config.manager import AppConfig
+from gitlab_tui.config.config import Config
 from gitlab_tui.ui.components.base_widget import BaseComponent
 
 
@@ -15,7 +15,7 @@ class PipelineListItem(BaseComponent, ListItem):
     """A custom list item for displaying pipeline information."""
 
     def __init__(
-        self, logger: Logger, config: AppConfig, pipeline_data: Dict[str, Any], **kwargs
+        self, logger: Logger, config: Config, pipeline_data: Dict[str, Any], **kwargs
     ) -> None:
         BaseComponent.__init__(self, logger, config, **kwargs)
         self.pipeline_data = pipeline_data
@@ -33,7 +33,7 @@ class PipelineListItem(BaseComponent, ListItem):
         # Format created time
         try:
             created_time = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
-            time_str = created_time.strftime(self.config.display.timestamp_format)
+            time_str = created_time.strftime(self.config.app.timestamp_format)
         except (ValueError, AttributeError):
             time_str = "Unknown"
 
