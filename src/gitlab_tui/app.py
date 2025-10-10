@@ -1,5 +1,3 @@
-"""Main GitLab TUI application."""
-
 import asyncio
 import os
 from logging import Formatter, Handler, Logger
@@ -15,7 +13,7 @@ from textual.theme import Theme
 from textual.widgets import Footer, Header, RichLog, TabbedContent, TabPane
 
 from gitlab_tui.api.client import GitlabAPI, GitLabAPIError
-from gitlab_tui.config.manager import AppConfig
+from gitlab_tui.config.config import Config
 from gitlab_tui.ui.components.pipeline_main_view import PipelineMainView
 from gitlab_tui.ui.components.pipeline_sidebar import PipelineSidebar
 
@@ -50,9 +48,17 @@ class GitLabTUI(App):
     error_message: reactive[Optional[str]] = reactive(None)
     debug_panel_visible: reactive[bool] = reactive(False)
 
-    def __init__(self, logger: Logger, gitlab_api: GitlabAPI, config: AppConfig):
+    def __init__(
+        self,
+        logger: Logger,
+        gitlab_api: GitlabAPI,
+        config: Config,
+        project: str,
+        branch: str,
+    ):
         super().__init__()
         self.config = config
+        self.logger = logger
 
         # Setup debug mode
         self.debug_mode = os.getenv("DEBUG", "").lower() in ("true", "1", "yes")
@@ -60,13 +66,10 @@ class GitLabTUI(App):
         self.debug_panel_visible = self.debug_mode
 
         self.gitlab_api = gitlab_api
-        self.project = config.gitlab.project  # Can be ID (int) or path (str)
-        self.branch = config.gitlab.branch
+        self.project = project  # Can be ID (int) or path (str)
+        self.branch = branch
         self.pipelines_data: list = []
         self.current_pipeline_jobs: list = []
-
-        # Setup logger for this instance
-        self.logger = logger
         self.logger.info(
             f"GitLab TUI starting - Debug mode: {self.debug_mode}, Debug keys: {self.debug_keys}"
         )

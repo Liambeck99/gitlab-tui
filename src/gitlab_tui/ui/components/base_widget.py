@@ -5,7 +5,7 @@ from logging import Logger
 from rich.style import Style
 from rich.text import Text
 
-from gitlab_tui.config.manager import AppConfig
+from gitlab_tui.config.config import Config
 
 
 class BaseComponent:
@@ -16,7 +16,7 @@ class BaseComponent:
     def __init__(
         self,
         logger: Logger,
-        config: AppConfig,
+        config: Config,
         **kwargs,
     ):
         super().__init__(**kwargs)

@@ -9,7 +9,7 @@ from textual.reactive import reactive
 from textual.widget import Widget
 from textual.widgets import Label, ListView, Static
 
-from gitlab_tui.config.manager import AppConfig
+from gitlab_tui.config.config import Config
 from gitlab_tui.ui.components.base_widget import BaseComponent
 from gitlab_tui.ui.components.pipeline_list_item import PipelineListItem
 
@@ -20,7 +20,7 @@ class PipelineSidebar(BaseComponent, Widget):
     pipelines: reactive[List[Dict[str, Any]]] = reactive([])
     selected_pipeline_id: reactive[Optional[int]] = reactive(None)
 
-    def __init__(self, logger: Logger, config: AppConfig, **kwargs) -> None:
+    def __init__(self, logger: Logger, config: Config, **kwargs) -> None:
         BaseComponent.__init__(self, logger, config, **kwargs)
         Widget.__init__(self, **kwargs)
 

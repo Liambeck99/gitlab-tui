@@ -1,11 +1,52 @@
+# Print info about each available command in this Makefile
 .PHONY: help
-help: ## Print info about each available command in this Makefile
-	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(firstword $(MAKEFILE_LIST)) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+help:
+	@awk 'BEGIN {FS = ":.*?## "} \
+		/^## ===/ { \
+			sub(/^## ===[ \t]*/, ""); \
+			sub(/[ \t]===/, ""); \
+			printf "\033[1;33m%s\033[0m\n", $$0; \
+			next \
+		} \
+		/^[a-zA-Z0-9_-]+:.*?## / { \
+			printf "  \033[36m%-28s\033[0m %s\n", $$1, $$2 \
+		}' $(firstword $(MAKEFILE_LIST))
 
 # === Variables ===
+
 SRC_DIRS := src/ tests/
 
-# === Code Quality Tools ===
+
+## === Development Setup ===
+
+.PHONY: install-poetry
+install-poetry: ## Install dependencies with poetry
+	poetry install
+
+.PHONY: install-pre-commit
+install-pre-commit: ## Install pre-commit hooks
+	poetry run pre-commit install
+
+.PHONY: install
+install: install-poetry install-pre-commit ## Install project requirements
+
+.PHONY: update
+update: ## Update dependencies
+	poetry update
+
+
+## === Pre-commit Management ===
+
+.PHONY: pre-commit-run
+pre-commit-run: ## Run pre-commit on all files
+	poetry run pre-commit run --all-files
+
+.PHONY: pre-commit-update
+pre-commit-update: ## Update pre-commit hook versions
+	poetry run pre-commit autoupdate
+
+
+## === Code Quality Tools ===
 
 .PHONY: format
 format: ## Run black code formatter
@@ -48,7 +89,7 @@ secrets-check: ## Check for new secrets against baseline
 	poetry run detect-secrets-hook --baseline .secrets.baseline $(FILES)
 
 
-# === Combined Commands ===
+## === Combined Commands ===
 
 .PHONY: format-all
 format-all: format sort-imports clean-imports ## Run all formatters (black, isort, autoflake)
@@ -59,10 +100,8 @@ check-all: format-check sort-imports-check clean-imports-check lint type-check s
 .PHONY: fix-all
 fix-all: format-all ## Run all formatters and auto-fixable lints
 
-.PHONY: pre-commit-manual
-pre-commit-manual: format-all lint type-check security-scan ## Run all pre-commit checks manually
 
-# === Testing ===
+## === Testing ===
 
 .PHONY: test
 test: ## Run pytest tests
@@ -76,34 +115,8 @@ test-cov: ## Run pytest with coverage report
 test-verbose: ## Run pytest with verbose output
 	poetry run pytest -v
 
-# === Development Setup ===
 
-.PHONY: install-poetry
-install-poetry: ## Install dependencies with poetry
-	poetry install
-
-.PHONY: install-pre-commit
-install-pre-commit: ## Install pre-commit hooks
-	poetry run pre-commit install
-
-.PHONY: install
-install: install-poetry install-pre-commit ## Install project requirements
-
-.PHONY: update
-update: ## Update dependencies
-	poetry update
-
-# === Pre-commit Management ===
-
-.PHONY: pre-commit-run
-pre-commit-run: ## Run pre-commit on all files
-	poetry run pre-commit run --all-files
-
-.PHONY: pre-commit-update
-pre-commit-update: ## Update pre-commit hook versions
-	poetry run pre-commit autoupdate
-
-# === Application ===
+## === Application ===
 
 .PHONY: run
 run: ## Run gitlab-tui
