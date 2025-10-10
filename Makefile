@@ -13,7 +13,7 @@ help:
 		}' $(firstword $(MAKEFILE_LIST))
 
 # === Variables ===
-#
+
 SRC_DIRS := src/ tests/
 
 
